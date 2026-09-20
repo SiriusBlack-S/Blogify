@@ -1,0 +1,24 @@
+const JWT = require('jsonwebtoken');
+
+const secret = process.env.JWT_SECRET;
+
+if (!secret) {
+    throw new Error('JWT_SECRET is not defined in environment variables');
+}
+
+function createTokenForUser(user) {
+    const payload = {
+        _id: user._id,
+        email: user.email,
+        profileImageURL: user.profileImageURL,
+        role: user.role,
+        fullName: user.fullName,
+    };
+    return JWT.sign(payload, secret);
+}
+
+function validateToken(token) {
+    return JWT.verify(token, secret);
+}
+
+module.exports = { createTokenForUser, validateToken };
